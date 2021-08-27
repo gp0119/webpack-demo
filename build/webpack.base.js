@@ -2,6 +2,17 @@ const chalk = require('chalk')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { appSrc } = require("./path.js");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const ctx = {
+  isEnvDevelopment: process.env.NODE_ENV === 'development',
+  isEnvProduction: process.env.NODE_ENV === 'production',
+}
+
+const {
+  isEnvDevelopment,
+  isEnvProduction
+} = ctx
 
 module.exports = {
   // 入口
@@ -64,32 +75,55 @@ module.exports = {
         include: appSrc,
         use: [
           'style-loader',
+          isEnvProduction && {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            }
+          }, // 仅生产环境
           'css-loader',
-        ],
+        ].filter(Boolean),
       },
       {
         test: /\.s[ac]ss$/i,
         include: appSrc,
         use: [
           'style-loader',
+          isEnvProduction && {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            }
+          }, // 仅生产环境
           'css-loader',
           'postcss-loader',
           'sass-loader',
-        ],
+        ].filter(Boolean),
       },
       {
         test: /\.less$/i,
         include: appSrc,
         use: [
           'style-loader',
+          isEnvProduction && {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            }
+          }, // 仅生产环境
           'css-loader',
           'postcss-loader',
           'less-loader',
-        ],
+        ].filter(Boolean),
       },
     ]
   },
   plugins: [
+    // MiniCssExtractPlugin 插件将 CSS 提取到单独的文件中，
+    // 为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载。
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash:8].css'
+    }),
     // 以 public 下 index.html 为模板生成 html,自动引入 bundle
     new HtmlWebpackPlugin({
       template: "public/index.html"
