@@ -2,6 +2,7 @@ const { merge } = require('webpack-merge')
 const base = require('./webpack.base.js')
 const { appDist, appSrc } = require("./path.js");
 const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = merge(base, {
   // 生产模式
@@ -49,7 +50,10 @@ module.exports = merge(base, {
   optimization: {
     minimizer: [
       // 使用 TerserWebpackPlugin 来压缩 JavaScript。
-      // webpack5 自带最新的 terser-webpack-plugin，无需手动安装。
+      // webpack v5 开箱即带有最新版本的 terser-webpack-plugin。
+      // 如果你使用的是 webpack v5 或更高版本，同时希望自定义配置，
+      // 那么仍需要安装 terser-webpack-plugin。
+      // 如果使用 webpack v4，则必须安装 terser-webpack-plugin v4 的版本。
       // TerserWebpackPlugin 默认就开启了多进程和缓存，无需再引入 ParallelUglifyPlugin。
       new TerserPlugin({
         parallel: 4,
@@ -73,6 +77,11 @@ module.exports = merge(base, {
           },
         },
       }),
+      // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+      new CssMinimizerPlugin({
+        parallel: 4,
+      }),
+      // `...`,
     ],
     // 抽离重复代码
     // webpack 将根据以下条件自动拆分 chunks：
