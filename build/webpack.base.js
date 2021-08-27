@@ -9,6 +9,14 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(js|jsx)$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'jsx',
+          target: 'es2015'
+        }
+      },
+      {
         test: /\.css$/,
         include: appSrc,
         use: [
