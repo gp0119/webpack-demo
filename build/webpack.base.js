@@ -17,19 +17,22 @@ module.exports = {
         ],
       },
       {
-        test: /.(scss|sass)$/,
+        test: /\.s[ac]ss$/i,
         include: appSrc,
         use: [
           'style-loader',
           'css-loader',
+          'postcss-loader',
           'sass-loader',
         ],
       },
       {
         test: /\.less$/i,
-        loader: [
+        include: appSrc,
+        use: [
           'style-loader',
           'css-loader',
+          'postcss-loader',
           'less-loader',
         ],
       },
