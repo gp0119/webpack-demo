@@ -1,6 +1,6 @@
 const { merge } = require('webpack-merge')
 const base = require('./webpack.base.js')
-const { appDist } = require("./path.js");
+const { appDist, appSrc } = require("./path.js");
 
 module.exports = merge(base, {
   // 生产模式
@@ -14,5 +14,35 @@ module.exports = merge(base, {
     path: appDist,
     // 编译前清除目录
     clean: true
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        include: [appSrc],
+        type: 'asset',
+        generator: {
+          filename: 'img/[name].[hash:8][ext]'
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 4096
+          }
+        }
+      },
+      {
+        test: /.(woff|woff2|eot|ttf|otf)$/i,
+        include: [appSrc],
+        type: 'asset',
+        generator: {
+          filename: 'fonts/[name].[hash:8][ext]'
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 4096
+          }
+        }
+      },
+    ]
   },
 })
