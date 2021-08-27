@@ -41,16 +41,23 @@ module.exports = {
   cache: {
     type: 'filesystem', // 使用文件缓存
   },
+  // 通过 thread-loader 将耗时的 loader 放在一个独立的 worker 池中运行，加快 loader 构建速度。
+  // 请仅在耗时的操作中使用此 loader！
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        loader: 'esbuild-loader',
         include: appSrc,
-        options: {
-          loader: 'jsx',
-          target: 'es2015'
-        }
+        use: [
+          'thread-loader',
+          {
+            loader: 'esbuild-loader',
+            options: {
+              loader: 'jsx',
+              target: 'es2015'
+            }
+          }
+        ],
       },
       {
         test: /\.css$/,
