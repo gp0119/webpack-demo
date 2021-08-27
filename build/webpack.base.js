@@ -1,3 +1,5 @@
+const chalk = require('chalk')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { appSrc } = require("./path.js");
 
@@ -50,6 +52,10 @@ module.exports = {
     // 以 public 下 index.html 为模板生成 html,自动引入 bundle
     new HtmlWebpackPlugin({
       template: "public/index.html"
+    }),
+    // 进度条
+    new ProgressBarPlugin({
+      format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
     })
   ]
 }
