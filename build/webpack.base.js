@@ -16,6 +16,15 @@ module.exports = {
           'css-loader',
         ],
       },
+      {
+        test: /.(scss|sass)$/,
+        include: appSrc,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
+      },
     ]
   },
   plugins: [
