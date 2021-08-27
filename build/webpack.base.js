@@ -46,6 +46,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         loader: 'esbuild-loader',
+        include: appSrc,
         options: {
           loader: 'jsx',
           target: 'es2015'
