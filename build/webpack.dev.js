@@ -1,6 +1,6 @@
 const { merge } = require('webpack-merge')
-const base = require('./webpack.base.js')
-const { appDist, appSrc } = require("./path.js");
+const base = require('./webpack.base')
+const { appDist, appSrc } = require("./path");
 
 module.exports = merge(base, {
   // 开发模式
