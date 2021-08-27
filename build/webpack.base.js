@@ -15,6 +15,8 @@ module.exports = {
     // extensions 表示需要解析的文件类型列表。在引入模块时可不带后缀
     // 根据项目中的文件类型，定义 extensions，以覆盖 webpack 默认的 extensions，加快解析速度。
     // 由于 webpack 的解析顺序是从左到右，因此要将使用频率高的文件类型放在左侧。
+    // webpack5 开箱即用的持久缓存是比 dll 更优的解决方案
+    // cache-loader 也不需要引入了，上面的 cache 已经帮助我们缓存了。
     extensions: [
       ".vue",
       ".js",
@@ -32,6 +34,12 @@ module.exports = {
     ],
     //如果项目不使用 symlinks（例如 npm link 或者 yarn link），可以设置 resolve.symlinks: false，减少解析工作量
     symlinks: false,
+  },
+  // 通过 cache: filesystem 可以将构建过程的 webpack 模板进行缓存，
+  // 大幅提升二次构建速度、打包速度，当构建突然中断，二次进行构建时，
+  // 可以直接从缓存中拉取，可提速 90% 左右。
+  cache: {
+    type: 'filesystem', // 使用文件缓存
   },
   module: {
     rules: [
