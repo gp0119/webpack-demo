@@ -80,4 +80,22 @@ if (build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
+if (build.productionGzip) {
+  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
+  webpackConfig.plugins.push(
+    new CompressionWebpackPlugin({
+      filename: "[path][base].gz",
+      algorithm: 'gzip',
+      test: new RegExp(
+        '\\.(' +
+        build.productionGzipExtensions.join('|') +
+        ')$'
+      ),
+      threshold: 10240,
+      minRatio: 0.8
+    })
+  )
+}
+
 module.exports = webpackConfig
