@@ -1,23 +1,24 @@
 const chalk = require('chalk')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { appSrc } = require("./path.js");
+const { appDist, appSrc } = require("./path.js");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const ctx = {
-  isEnvDevelopment: process.env.NODE_ENV === 'development',
-  isEnvProduction: process.env.NODE_ENV === 'production',
-}
-
-const {
-  isEnvDevelopment,
-  isEnvProduction
-} = ctx
+const { NODE_ENV } = process.env
+const isEnvProduction = NODE_ENV === 'production'
 
 module.exports = {
   // 入口
   entry: {
     index: './src/index.js',
+  },
+  output: {
+    // 仅在生产环境添加 hash
+    filename: isEnvProduction ? 'js/[name].[contenthash].bundle.js' : 'js/[name].bundle.js',
+    path: appDist,
+    // 编译前清除目录
+    clean: true,
+    // publicPath: ctx.isEnvProduction ? 'https://xxx.com' : '', 关闭该 CDN 配置，因为示例项目，无 CDN 服务。
   },
   resolve: {
     alias: {
@@ -56,6 +57,32 @@ module.exports = {
   // 请仅在耗时的操作中使用此 loader！
   module: {
     rules: [
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        include: [appSrc],
+        type: 'asset',
+        generator: {
+          filename: 'img/[name].[hash:8][ext]'
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: isEnvProduction ? 4096 : 0
+          }
+        }
+      },
+      {
+        test: /.(woff|woff2|eot|ttf|otf)$/i,
+        include: [appSrc],
+        type: 'asset',
+        generator: {
+          filename: 'fonts/[name].[hash:8][ext]'
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: isEnvProduction ? 4096 : 0
+          }
+        }
+      },
       {
         test: /\.(js|jsx)$/,
         include: appSrc,
