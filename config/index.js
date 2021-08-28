@@ -32,6 +32,8 @@ module.exports = {
     errorOverlay: true,
   },
   build: {
+    // 是否开启打包体积分析
+    bundleAnalyzerReport: true,
     productionGzip: false,
   }
 }

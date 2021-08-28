@@ -2,8 +2,9 @@ const { merge } = require('webpack-merge')
 const base = require('./webpack.base.js')
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const {build} = require('../config')
 
-module.exports = merge(base, {
+const webpackConfig = merge(base, {
   mode: 'production',
   optimization: {
     // 通过配置 optimization.runtimeChunk = true，为运行时代码创建一个额外的 chunk，减少 entry chunk 体积，提高性能。
@@ -73,3 +74,10 @@ module.exports = merge(base, {
     },
   }
 })
+
+if (build.bundleAnalyzerReport) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig
