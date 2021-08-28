@@ -2,7 +2,7 @@ const { merge } = require('webpack-merge')
 const base = require('./webpack.base.js')
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const {build} = require('../config')
+const {build } = require('../config')
 
 const webpackConfig = merge(base, {
   mode: 'production',
@@ -72,7 +72,7 @@ const webpackConfig = merge(base, {
         }
       }
     },
-  }
+  },
 })
 
 if (build.bundleAnalyzerReport) {

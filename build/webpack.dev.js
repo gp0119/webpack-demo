@@ -7,7 +7,7 @@ let devCongig = merge(base, {
   devtool: dev.devtool,
   devServer: {
     host: dev.host,
-    port: dev.port,
+    port: 'auto',
     proxy: dev.proxy,
     client: {
       logging: dev.logging,
@@ -15,7 +15,7 @@ let devCongig = merge(base, {
     },
     static: {
       directory: dev.static,
-      publicPath: dev.publicPath,
+      publicPath: dev.assetsPublicPath,
     },
     open: dev.autoOpenBrowser,
     compress: dev.compress,

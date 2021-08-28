@@ -1,8 +1,12 @@
 const chalk = require('chalk')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { appDist, appSrc } = require("./path.js");
+const { appDist, appSrc, appPublic } = require("./path.js");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { dev, build } = require('../config')
+const utils = require('./utils.js')
+const path = require('path')
+const CopyPlugin = require("copy-webpack-plugin");
 
 const { NODE_ENV } = process.env
 const isEnvProduction = NODE_ENV === 'production'
@@ -13,12 +17,14 @@ module.exports = {
     index: './src/index.js',
   },
   output: {
-    // 仅在生产环境添加 hash
-    filename: isEnvProduction ? 'js/[name].[contenthash].bundle.js' : 'js/[name].bundle.js',
     path: appDist,
+    // 仅在生产环境添加 hash
+    filename: isEnvProduction
+      ? utils.assetsPath('js/[name].[contenthash].bundle.js')
+      :  '[name].bundle.js',
     // 编译前清除目录
     clean: true,
-    // publicPath: ctx.isEnvProduction ? 'https://xxx.com' : '', 关闭该 CDN 配置，因为示例项目，无 CDN 服务。
+    publicPath: isEnvProduction ? build.assetsPublicPath : dev.assetsPublicPath,
   },
   resolve: {
     alias: {
@@ -62,7 +68,9 @@ module.exports = {
         include: [appSrc],
         type: 'asset',
         generator: {
-          filename: 'img/[name].[hash:8][ext]'
+          filename: isEnvProduction
+            ? utils.assetsPath('img/[name].[hash:8][ext]')
+            :  '[name].[hash:8][ext]',
         },
         parser: {
           dataUrlCondition: {
@@ -75,7 +83,9 @@ module.exports = {
         include: [appSrc],
         type: 'asset',
         generator: {
-          filename: 'fonts/[name].[hash:8][ext]'
+          filename: isEnvProduction
+            ? utils.assetsPath('fonts/[name].[hash:8][ext]')
+            :  '[name].[hash:8][ext]',
         },
         parser: {
           dataUrlCondition: {
@@ -149,15 +159,35 @@ module.exports = {
     // MiniCssExtractPlugin 插件将 CSS 提取到单独的文件中，
     // 为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载。
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash:8].css'
+      filename: isEnvProduction
+        ? utils.assetsPath('css/[name].[contenthash].css')
+        :  '[name].[contenthash].css',
     }),
     // 以 public 下 index.html 为模板生成 html,自动引入 bundle
     new HtmlWebpackPlugin({
-      template: "public/index.html"
+      template: "public/index.html",
+      favicon: path.join(__dirname, '../public', 'favicon.ico'),
+      inject: true
     }),
     // 进度条
     new ProgressBarPlugin({
       format: `  :msg [:bar] ${ chalk.green.bold(':percent') } (:elapsed s)`
-    })
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: appPublic,
+          to: isEnvProduction ? build.assetsSubDirectory :dev.assetsSubDirectory,
+          noErrorOnMissing: true,
+          globOptions: {
+            dot: true,
+            ignore: [
+              "**/index.html",
+              "**/favicon.ico"
+            ],
+          }
+        },
+      ],
+    }),
   ]
 }
