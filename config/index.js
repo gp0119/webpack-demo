@@ -2,6 +2,9 @@ const { appDist } = require("../build/path");
 
 module.exports = {
   dev: {
+    //是否进行构建速度分析 可以看到各个 loader、plugin 的构建时长，
+    // 后续可针对耗时 loader、plugin 进行优化。
+    isNeedSpeed: true,
     // 开发工具，开启 source map，编译调试
     devtool: 'eval-cheap-module-source-map',
     proxy: {

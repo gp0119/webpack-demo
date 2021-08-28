@@ -2,7 +2,7 @@ const { merge } = require('webpack-merge')
 const base = require('./webpack.base')
 const { dev } = require('../config')
 
-module.exports = merge(base, {
+let devCongig = merge(base, {
   mode: 'development',
   devtool: dev.devtool,
   devServer: {
@@ -22,3 +22,11 @@ module.exports = merge(base, {
     hot: true,
   },
 })
+
+if (dev.isNeedSpeed) {
+  const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+  const smp = new SpeedMeasurePlugin();
+  devCongig = smp.wrap(devCongig)
+}
+
+module.exports = devCongig
