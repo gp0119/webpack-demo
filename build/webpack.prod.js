@@ -3,6 +3,8 @@ const base = require('./webpack.base.js')
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const {build } = require('../config')
+const WebpackCdnPlugin = require("webpack-cdn-plugin");
+const utils = require("./utils.js");
 
 const webpackConfig = merge(base, {
   mode: 'production',
@@ -73,6 +75,10 @@ const webpackConfig = merge(base, {
       }
     },
   },
+  plugins: [
+    // 使用 cdn
+    new WebpackCdnPlugin(utils.cdnLoader(true)),
+  ]
 })
 
 if (build.bundleAnalyzerReport) {
