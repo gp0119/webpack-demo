@@ -36,7 +36,7 @@ module.exports = {
   build: {
     assetsSubDirectory: `${b.verssion}/`,
     // 是否开启打包体积分析
-    bundleAnalyzerReport: true,
+    bundleAnalyzerReport: false,
     // 是否开启 gzip 压缩
     productionGzip: false,
     productionGzipExtensions: ['js', 'css'],

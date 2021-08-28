@@ -7,6 +7,7 @@ const { dev, build } = require('../config')
 const utils = require('./utils.js')
 const path = require('path')
 const CopyPlugin = require("copy-webpack-plugin");
+const { VueLoaderPlugin } = require('vue-loader')
 
 const { NODE_ENV } = process.env
 const isEnvProduction = NODE_ENV === 'production'
@@ -14,7 +15,7 @@ const isEnvProduction = NODE_ENV === 'production'
 module.exports = {
   // 入口
   entry: {
-    index: './src/index.js',
+    index: './src/main.js',
   },
   output: {
     path: appDist,
@@ -64,6 +65,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
+      {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         include: [appSrc],
         type: 'asset',
@@ -111,7 +116,7 @@ module.exports = {
         test: /\.css$/,
         include: appSrc,
         use: [
-          'style-loader',
+          'vue-style-loader',
           isEnvProduction && {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -125,7 +130,7 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         include: appSrc,
         use: [
-          'style-loader',
+          'vue-style-loader',
           isEnvProduction && {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -134,14 +139,22 @@ module.exports = {
           }, // 仅生产环境
           'css-loader',
           'postcss-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // sass-loader version >= 8
+              sassOptions: {
+                indentedSyntax: true
+              }
+            }
+          }
         ].filter(Boolean),
       },
       {
         test: /\.less$/i,
         include: appSrc,
         use: [
-          'style-loader',
+          'vue-style-loader',
           isEnvProduction && {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -156,6 +169,8 @@ module.exports = {
     ]
   },
   plugins: [
+    // 请确保引入这个插件！
+    new VueLoaderPlugin(),
     // MiniCssExtractPlugin 插件将 CSS 提取到单独的文件中，
     // 为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载。
     new MiniCssExtractPlugin({
@@ -165,6 +180,7 @@ module.exports = {
     }),
     // 以 public 下 index.html 为模板生成 html,自动引入 bundle
     new HtmlWebpackPlugin({
+      title: 'vue2-demo',
       template: "public/index.html",
       favicon: path.join(__dirname, '../public', 'favicon.ico'),
       inject: true
