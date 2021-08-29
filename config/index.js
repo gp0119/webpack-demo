@@ -3,6 +3,7 @@ const b = require('../src/build-config')
 
 module.exports = {
   dev: {
+    notifyOnErrors: true,
     //是否进行构建速度分析 可以看到各个 loader、plugin 的构建时长，
     // 后续可针对耗时 loader、plugin 进行优化。
     isNeedSpeed: false,
