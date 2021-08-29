@@ -78,7 +78,15 @@ const webpackConfig = merge(base, {
   plugins: [
     // 使用 cdn
     new WebpackCdnPlugin(utils.cdnLoader(true)),
-  ]
+  ],
+  stats: {
+    colors: true,
+    // 是否展示资源信息
+    assets: false,
+    chunks: true,
+    chunkModules: false,
+    modules: false,
+  }
 })
 
 if (build.bundleAnalyzerReport) {
