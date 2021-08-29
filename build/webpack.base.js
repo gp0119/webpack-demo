@@ -117,7 +117,11 @@ module.exports = {
               esModule: false,
             }
           }, // 仅生产环境
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 }
+          },
+          'postcss-loader'
         ].filter(Boolean),
       },
       {
@@ -131,7 +135,10 @@ module.exports = {
               esModule: false,
             }
           }, // 仅生产环境
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 2 }
+          },
           'postcss-loader',
           {
             loader: 'sass-loader',
@@ -155,7 +162,10 @@ module.exports = {
               esModule: false,
             }
           }, // 仅生产环境
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 2, },
+          },
           'postcss-loader',
           'less-loader',
         ].filter(Boolean),

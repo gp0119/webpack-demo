@@ -1,8 +1,10 @@
 <template>
   <div>
     <HelloWorld />
-    <img src="@/asset/img/avatar.png" alt="">
-    <img :src="avatarMini" alt="">
+    <div class="container">
+      <img src="@/asset/img/avatar.png" class="img1" alt="">
+      <img :src="avatarMini" class="img2" alt="">
+    </div>
   </div>
 </template>
 
@@ -22,6 +24,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+ .container {
+   display: flex;
+ }
 </style>
