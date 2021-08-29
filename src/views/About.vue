@@ -1,9 +1,3 @@
-<template>
-  <div>
-    {{ msg }}
-  </div>
-</template>
-
 <script>
 export default {
   data() {
@@ -11,9 +5,10 @@ export default {
       msg: 'about'
     }
   },
+  render() {
+    return <div>
+      { this.msg }
+    </div>
+  }
 }
 </script>
-
-<style scoped>
-
-</style>
