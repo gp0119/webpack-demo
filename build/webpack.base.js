@@ -103,13 +103,7 @@ module.exports = {
         include: appSrc,
         use: [
           'thread-loader',
-          {
-            loader: 'esbuild-loader',
-            options: {
-              loader: 'jsx',
-              target: 'es2015'
-            }
-          }
+          'babel-loader'
         ],
       },
       {
